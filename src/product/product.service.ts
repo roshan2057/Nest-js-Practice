@@ -1,10 +1,20 @@
-import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Productdto } from "./product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "./product.entity";
 import { Repository } from "typeorm";
 import { CategoryEntity } from "src/category/category.entity";
 import { SubCategoryEntity } from "src/sub_category/sub_category.entity";
+
+interface response{
+        product_id :number,
+        name: string,
+        price: number,
+        quantity: number,
+        category: string,
+        sub_category: string
+      
+}
 
 @Injectable()
 export class ProductService {
@@ -13,7 +23,7 @@ export class ProductService {
         @InjectRepository(SubCategoryEntity) private sub_categoryrepository: Repository<SubCategoryEntity>,
         @InjectRepository(ProductEntity) private productrepository: Repository<ProductEntity>
     ) { }
-    async getallproduct(): Promise<any> {
+    async getallproduct(): Promise<response[]> {
         // const products = await this.productrepository
         // .createQueryBuilder("product")
         // .innerJoin("product.category", "category")
@@ -47,7 +57,7 @@ export class ProductService {
         return products
 
     }
-    async createproduct(data: Productdto): Promise<string> {
+    async createproduct(data: Productdto): Promise<{message:string, statusCode:number}> {
         const product = new ProductEntity();
         product.name = data.name;
         product.price = data.price;
@@ -64,6 +74,6 @@ export class ProductService {
         product.sub_category = sub_category;
         console.log(product)
         await this.productrepository.save(product)
-        return "Created"
+        return {message:"Created sucessfully",statusCode:HttpStatus.CREATED}
     }
 }

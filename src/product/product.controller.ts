@@ -1,8 +1,11 @@
 import { Body, Controller, Get, Injectable, Post, ValidationPipe } from "@nestjs/common";
 import { Productdto } from "./product.dto";
 import { ProductService } from "./product.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Product")
 @Controller("product")
+
 export class ProductController {
     constructor(
         private productservice: ProductService

@@ -2,6 +2,20 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "src/product/product.entity";
 import { Repository } from "typeorm";
+interface response {
+    product_id: number,
+    name: string,
+    price: number,
+    quantity: number,
+    category: {
+        cat_id: number,
+        name: string
+    },
+    sub_category: {
+        sub_id: number,
+        name: string
+    }
+}
 
 @Injectable()
 export class SearchService {
@@ -9,20 +23,7 @@ export class SearchService {
         @InjectRepository(ProductEntity) private productrepository: Repository<ProductEntity>,
     ) { }
 
-    async Search(key: string): Promise<{
-        product_id: number,
-        name: string,
-        price: number,
-        quantity: number,
-        category: {
-            cat_id: number,
-            name: string
-        },
-        sub_category: {
-            sub_id: number,
-            name: string
-        }
-    }[]> {
+    async Search(key: string): Promise<response[]> {
         // const results = await this.productrepository.query(`
         // SELECT 'product' as type, product.product_id, product.name, product.price, product.quantity
         //     FROM product
